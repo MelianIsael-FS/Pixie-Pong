@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixiJS Circle Game</title>
-    <!-- Load PixiJS -->
     <script src="https://pixijs.download/release/pixi-5.3.3.min.js"></script>
     <style>
         body {
@@ -16,31 +15,27 @@
 <body>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Check if PixiJS is loaded
             if (typeof PIXI === 'undefined') {
                 console.error('PixiJS not loaded');
                 return;
             }
 
-            // Create a new PixiJS application
             const app = new PIXI.Application({
                 width: 800,
                 height: 600,
-                backgroundColor: 0x0000ff, // Blue background
+                backgroundColor: 0x0000ff, 
                 resolution: window.devicePixelRatio || 1,
                 autoDensity: true
             });
-            document.body.appendChild(app.view); // Attach the PixiJS canvas
-
-            // Initialize borders and their graphics
+            document.body.appendChild(app.view); 
             const borders = [
-                { x: 0, y: 0, width: 800, height: 10, hit: false },   // Top
-                { x: 0, y: 590, width: 800, height: 10, hit: false },  // Bottom
-                { x: 0, y: 0, width: 10, height: 600, hit: false },    // Left
-                { x: 790, y: 0, width: 10, height: 600, hit: false }   // Right
+                { x: 0, y: 0, width: 800, height: 10, hit: false },   
+                { x: 0, y: 590, width: 800, height: 10, hit: false }, 
+                { x: 0, y: 0, width: 10, height: 600, hit: false },   
+                { x: 790, y: 0, width: 10, height: 600, hit: false }  
             ];
 
-            // Create border rectangles (red)
+            
             const borderGraphics = borders.map(border => {
                 const rect = new PIXI.Graphics();
                 rect.beginFill(0xff0000); // Red
@@ -50,7 +45,7 @@
                 return rect;
             });
 
-            // Create the circle object
+            
             const circle = new PIXI.Graphics();
             const circleRadius = 15;
             let circleX = app.screen.width / 2;
@@ -58,43 +53,43 @@
             let velocityX = 2;
             let velocityY = 3;
 
-            circle.beginFill(0xffff00); // Yellow
+            circle.beginFill(0xffff00); 
             circle.drawCircle(0, 0, circleRadius);
             circle.endFill();
             circle.x = circleX;
             circle.y = circleY;
             app.stage.addChild(circle);
 
-            // Function to check if the circle hits any border
+            
             function checkCollision() {
                 borders.forEach((border, index) => {
                     if (!border.hit) {
                         if (
-                            circle.x - circleRadius <= border.x + border.width && // Left side
-                            circle.x + circleRadius >= border.x && // Right side
-                            circle.y - circleRadius <= border.y + border.height && // Top side
-                            circle.y + circleRadius >= border.y // Bottom side
+                            circle.x - circleRadius <= border.x + border.width && 
+                            circle.x + circleRadius >= border.x && 
+                            circle.y - circleRadius <= border.y + border.height && 
+                            circle.y + circleRadius >= border.y 
                         ) {
-                            border.hit = true; // Mark border as hit
-                            borderGraphics[index].tint = 0xffff00; // Change border color to yellow
+                            border.hit = true; 
+                            borderGraphics[index].tint = 0xffff00; 
                         }
                     }
                 });
             }
 
-            // Function to check if all borders have been hit
+            
             function allBordersHit() {
                 return borders.every(border => border.hit);
             }
 
-            // Game loop logic wrapped in a promise to handle completion
+            
             const gameCompletePromise = new Promise((resolve) => {
                 function gameLoop() {
-                    // Update circle position
+                    
                     circleX += velocityX;
                     circleY += velocityY;
 
-                    // Bounce the circle off walls
+                    
                     if (circleX - circleRadius <= 0 || circleX + circleRadius >= app.screen.width) {
                         velocityX *= -1;
                     }
@@ -102,26 +97,26 @@
                         velocityY *= -1;
                     }
 
-                    // Apply new position to the circle
+                    
                     circle.x = circleX;
                     circle.y = circleY;
 
-                    // Check for border collisions
+                    
                     checkCollision();
 
-                    // If all borders are hit, resolve the promise
+                    
                     if (allBordersHit()) {
-                        resolve(); // End the game
+                        resolve(); 
                     }
                 }
 
-                app.ticker.add(gameLoop); // Start the game loop
+                app.ticker.add(gameLoop); 
             });
 
-            // Once game is completed, show a message and stop the loop
+            
             gameCompletePromise.then(() => {
                 alert('Congratulations! You hit all borders!');
-                app.ticker.stop(); // Stop the game loop
+                app.ticker.stop(); 
             });
         });
     </script>
